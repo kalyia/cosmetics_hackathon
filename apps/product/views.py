@@ -3,11 +3,15 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
-from apps.product.models import Product, LikeProduct
+from apps.product.models import Product, LikeProduct,Review
 from apps.product.paginations import ProductPagination
-from apps.product.serializers import ProductSerializer, LikeProductSerializer
+from apps.product.serializers import ProductSerializer, LikeProductSerializer, ReviewSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
+from .permissions import IsAuthororAdminPermission
+from rest_framework import viewsets
+
+
 
 
 class ListCreateProductView(generics.ListCreateAPIView):
@@ -16,11 +20,9 @@ class ListCreateProductView(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticatedOrReadOnly,)
     pagination_class = ProductPagination
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ["is_published", "title"]
-    ordering_fields = ['update_date']
-
-    def get_queryset(self):
-        return Product.objects.filter(is_published=True)
+    filterset_fields = ["created", "name"]
+    ordering_fields = ['updated']
+    search_fields = ['name', 'slug']
 
     def get_serializer_context(self):
         return super().get_serializer_context()
@@ -31,7 +33,7 @@ class GetProductView(APIView):
 
     def get(self, request, pk):
         product = get_object_or_404(Product, pk=pk)
-        product.watch += 1
+        # product.watch += 1
         product.save()
         serializer = ProductSerializer(product)
         return Response(serializer.data)
@@ -55,3 +57,17 @@ class LikeProductView(APIView):
         serializer = LikeProductSerializer(like)
         return Response(serializer.data)
 
+
+class ReviewViewSet(viewsets.ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+    def get_permissions(self):
+        if self.action == 'ceate':
+            return [IsAuthenticated()]
+    
+        return [IsAuthororAdminPermission()]
+
+class DestroyProductView(generics.DestroyAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
