@@ -2,19 +2,19 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import filters
+from rest_framework import viewsets
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
+
 from apps.product.models import Product, LikeProduct,Review
 from apps.product.paginations import ProductPagination
 from apps.product.serializers import ProductSerializer, LikeProductSerializer, ReviewSerializer
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters
 from .permissions import IsAuthororAdminPermission
-from rest_framework import viewsets
-
-
 
 
 class ListCreateProductView(generics.ListCreateAPIView):
+
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
@@ -29,18 +29,20 @@ class ListCreateProductView(generics.ListCreateAPIView):
 
 
 class GetProductView(APIView):
-    """добавление счетчика просмотров"""
 
     def get(self, request, pk):
         product = get_object_or_404(Product, pk=pk)
-        # product.watch += 1
         product.save()
         serializer = ProductSerializer(product)
         return Response(serializer.data)
 
 
+class UpdateProductView(generics.UpdateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+
 class LikeProductView(APIView):
-    """ставить лайки"""
 
     permission_classes = (IsAuthenticated,)
 
@@ -67,6 +69,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
             return [IsAuthenticated()]
     
         return [IsAuthororAdminPermission()]
+        
 
 class DestroyProductView(generics.DestroyAPIView):
     queryset = Product.objects.all()

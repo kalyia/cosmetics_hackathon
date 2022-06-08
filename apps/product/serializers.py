@@ -1,8 +1,10 @@
 from rest_framework import serializers
+
 from apps.product.models import Product, LikeProduct, Review
 
 
 class ProductSerializer(serializers.ModelSerializer):
+
     owner = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
@@ -18,11 +20,13 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class LikeProductSerializer(serializers.ModelSerializer):
+    
     user = serializers.HiddenField(default=serializers.CurrentUserDefault)
 
     class Meta:
         model = LikeProduct
         fields = "__all__"
+
 
 class ReviewSerializer(serializers.ModelSerializer):
 

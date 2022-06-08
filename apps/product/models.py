@@ -5,6 +5,7 @@ from apps.category.models import Category
 
 
 class Product(models.Model):
+
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='product')
     name = models.CharField(max_length=200, db_index=True)
     slug = models.SlugField(max_length=200, db_index=True)
@@ -29,6 +30,7 @@ class LikeProduct(models.Model):
         user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='likes')
         product = models.ForeignKey(to=Product, on_delete=models.CASCADE, related_name="likes")
         is_like = models.BooleanField(default=True)
+
 
 class Review(models.Model):
     author = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reviews')
