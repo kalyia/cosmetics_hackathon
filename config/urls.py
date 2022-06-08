@@ -1,12 +1,12 @@
 from django.contrib import admin
-from django.urls import path, include 
+from django.urls import path, include
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 from django.conf import settings
 from django.conf.urls.static import static
-from rest_framework.routers import SimpleRouter
-from apps.product.views import ReviewViewSet
 
-router = SimpleRouter()
-router.register('reviews', ReviewViewSet)
+
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -25,13 +25,10 @@ urlpatterns = [
     path(r'swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path(r'redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('admin/', admin.site.urls),
-    path('api/v1/shoppingcart/', include('apps.cart.urls')),
+    path('api/v1/account/', include('apps.account.urls')),
     path('api/v1/category/', include('apps.category.urls')),
     path('api/v1/product/', include('apps.product.urls')),
-    path('', include(router.urls)),
-]
-
-    path('api/v1/account/', include('apps.account.urls')),
+    path('api/v1/shoppingcart/', include('apps.cart.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
