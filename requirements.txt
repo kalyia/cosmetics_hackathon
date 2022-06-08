@@ -4,4 +4,4 @@ pillow
 psycopg2-binary
 python-decouple
 drf-yasg
-django-filter
+django-filter 
