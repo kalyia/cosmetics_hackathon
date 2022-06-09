@@ -6,6 +6,7 @@ from rest_framework import filters
 from rest_framework import viewsets
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import OrderingFilter
 
 from apps.product.models import Product, LikeProduct,Review
 from apps.product.paginations import ProductPagination
@@ -19,9 +20,9 @@ class ListCreateProductView(generics.ListCreateAPIView):
     serializer_class = ProductSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
     pagination_class = ProductPagination
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filter_backends = [DjangoFilterBackend, OrderingFilter, filters.SearchFilter]
     filterset_fields = ["created", "name"]
-    ordering_fields = ['updated']
+    ordering_fields = ['name', 'price']
     search_fields = ['name', 'slug']
 
     def get_serializer_context(self):
