@@ -5,6 +5,13 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework import routers
+
+from apps.product.views import ReviewViewSet 
+
+router = routers.SimpleRouter()
+router.register(r'reviews', ReviewViewSet)
+
 
 
 schema_view = get_schema_view(
@@ -28,6 +35,7 @@ urlpatterns = [
     path('api/v1/category/', include('apps.category.urls')),
     path('api/v1/product/', include('apps.product.urls')),
     path('api/v1/shoppingcart/', include('apps.cart.urls')),
+    path('api/v1/', include(router.urls)),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
