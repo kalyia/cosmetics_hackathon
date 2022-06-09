@@ -66,7 +66,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
 
     def get_permissions(self):
-        if self.action == 'ceate':
+        if self.action == 'create':
             return [IsAuthenticated()]
     
         return [IsAuthororAdminPermission()]
