@@ -14,9 +14,12 @@ class CartItemSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
-        rep['product'] = instance.product.title
-        rep['total_price'] = instance.get_total_price_item()
-        return rep
+        try:
+            rep['product'] = instance.product.name
+            rep['total_price'] = instance.get_total_price_item()
+            return rep
+        except:
+            return rep 
 
 
 class ShoppingCartSerializer(serializers.ModelSerializer):
@@ -26,6 +29,9 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
-        rep['products'] = CartItemSerializer(instance.cart_item.all(), many=True).data
-        rep['total_price'] = instance.get_total_all_price()
-        return rep
+        try:
+            rep['products'] = CartItemSerializer(instance.cart_item.all(), many=True).data
+            rep['total_price'] = instance.get_total_all_price()
+            return rep
+        except:
+            return rep 
