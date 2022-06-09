@@ -22,7 +22,7 @@ class ListCreateProductView(generics.ListCreateAPIView):
     pagination_class = ProductPagination
     filter_backends = [DjangoFilterBackend, OrderingFilter, filters.SearchFilter]
     filterset_fields = ["created", "name"]
-    ordering_fields = ['name', 'price']
+    ordering_fields = ['price']
     search_fields = ['name', 'slug']
 
     def get_serializer_context(self):
