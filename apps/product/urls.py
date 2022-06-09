@@ -10,6 +10,7 @@ urlpatterns = [
     path('<int:pk>/', GetProductView.as_view()),
     path('<int:pk>/like/', LikeProductView.as_view()),
     path('delete/<int:pk>/', DestroyProductView.as_view()),
+    path('like/', LikeProductView.as_view()),
 
     
 
